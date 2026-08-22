@@ -21,6 +21,8 @@ The API is currently Beta and asynchronous. A request returns a `job_id`; a comp
 
 No Cloudinary API secret, Supabase secret key, or OpenAI API key may enter a Client Component or browser response.
 
+Video bytes travel directly from the browser to Cloudinary with short-lived signed parameters. The Next.js server chooses a random public ID and signs the accepted formats, ingestion context, tags, delivery type, and overwrite rule. After upload, the server reads the asset back by immutable `asset_id` and verifies its public-ID namespace, ingestion marker, decoded format, and actual byte size before analysis begins.
+
 ## Workflow state
 
 ```text

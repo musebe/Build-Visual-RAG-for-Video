@@ -42,10 +42,19 @@ Copy the environment template and keep all API secrets server-only:
 ```bash
 cp .env.example .env.local
 npm install
+npx supabase db push
 npm run dev
 ```
 
-The Cloudinary AI Video Analysis API is currently Beta. Parameter names and availability may change before general access. The application must fail visibly when the product environment cannot access the API.
+Apply [`supabase/migrations/202608220001_visual_rag.sql`](supabase/migrations/202608220001_visual_rag.sql) in the Supabase SQL Editor if you do not use the Supabase CLI. The migration creates the `vector` extension, workflow tables, constraints, and server-only row-level security boundary.
+
+The Cloudinary AI Video Analysis API is currently Beta. Confirm that your Cloudinary product environment can use it before testing. Parameter names and availability may change before general access. The application fails visibly when the product environment cannot access the API.
+
+## Ingestion API
+
+The browser asks `POST /api/uploads/sign` for constrained upload parameters, uploads the video directly to Cloudinary, then sends the returned `asset_id`, `public_id`, and original filename to `POST /api/videos`. The server reads the Cloudinary asset back by immutable ID before it starts analysis. Poll `GET /api/videos/:videoId` until the state advances from `analyzing` to `transcript_ready`.
+
+This direct-upload design keeps large video bytes and Cloudinary credentials out of the Next.js function. The signature fixes the random public ID, formats, tags, context, delivery type, and overwrite behavior. The server independently checks Cloudinary's decoded format and file size during registration.
 
 ## Validation
 
