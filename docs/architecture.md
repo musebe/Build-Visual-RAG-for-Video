@@ -78,6 +78,10 @@ Search embeds the question with the same model used for every stored scene, then
 
 Filtering inside the SQL function prevents an outer PostgREST filter from shrinking an already limited global result set.
 
+The first demo uses exact cosine search because each video produces a modest number of scene rows. It does not add an approximate vector index prematurely. If the corpus grows toward hundreds of thousands of scenes, benchmark an HNSW index and its filtered-recall behavior before changing the retrieval proof.
+
+`text-embedding-3-small` produces the 1,536-dimensional vectors in this version. Both the video row and each scene row persist that model name, and the SQL function filters on it. A query is rejected if the configured model differs from the indexed model because cross-model vector comparisons are not meaningful.
+
 ## Timestamp citations
 
 A citation is correct only when it names the video and includes the exact Cloudinary segment range. Clicking it calls the Cloudinary player instance's `currentTime(start_time)` method and then starts playback. The visible result keeps the generated description and time range beside the player so a reviewer can verify the retrieval claim.

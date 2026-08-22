@@ -68,7 +68,7 @@ export type SceneRowData = {
   end_time: number;
   description: string;
   retrieval_text: string;
-  embedding: string | null;
+  embedding: number[] | null;
   embedding_model: string | null;
   created_at: string;
   updated_at: string;
@@ -112,7 +112,26 @@ export type Database = {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      match_video_scenes: {
+        Args: {
+          query_video_id: string;
+          query_embedding: number[];
+          query_model: string;
+          match_threshold: number;
+          match_count: number;
+        };
+        Returns: {
+          video_id: string;
+          cloudinary_public_id: string;
+          scene_id: number;
+          scene_index: number;
+          description: string;
+          start_time: number;
+          end_time: number;
+          similarity: number;
+        }[];
+      };
+    };
   };
 };
-

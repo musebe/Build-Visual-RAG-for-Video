@@ -56,6 +56,8 @@ The browser asks `POST /api/uploads/sign` for constrained upload parameters, upl
 
 This direct-upload design keeps large video bytes and Cloudinary credentials out of the Next.js function. The signature fixes the random public ID, formats, tags, context, delivery type, and overwrite behavior. The server independently checks Cloudinary's decoded format and file size during registration.
 
+Call `POST /api/videos/:videoId/index` once the transcript is ready. The server embeds scene descriptions in bounded batches with `text-embedding-3-small` and stores all 1,536-dimensional vectors with their model name. `POST /api/videos/:videoId/search` embeds a natural-language query and calls a video-scoped cosine-search function. Every result preserves the Cloudinary scene's exact start and end times for player citations.
+
 ## Validation
 
 ```bash

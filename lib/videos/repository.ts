@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import type { CloudinaryVideo } from "@/lib/cloudinary/video-assets";
 import type { VisualScene } from "@/lib/cloudinary/ai-video-analysis";
+import { sceneMatchesSchema } from "@/lib/search/contracts";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export const videoStatusSchema = z.enum([
@@ -39,6 +40,20 @@ export const videoRowSchema = z.object({
 });
 
 export type VideoRow = z.infer<typeof videoRowSchema>;
+
+const sceneForEmbeddingSchema = z.object({
+  id: z.number().int().positive(),
+  video_id: z.string().uuid(),
+  scene_index: z.number().int().nonnegative(),
+  start_time: z.number().nonnegative(),
+  end_time: z.number().nonnegative(),
+  description: z.string().min(1),
+  retrieval_text: z.string().min(1),
+});
+
+const scenesForEmbeddingSchema = z.array(sceneForEmbeddingSchema).min(1);
+
+export type SceneForEmbedding = z.infer<typeof sceneForEmbeddingSchema>;
 
 function assertNoDatabaseError(error: { message: string } | null, action: string) {
   if (error) throw new Error(`Database ${action} failed.`);
@@ -148,5 +163,76 @@ export async function persistVisualTranscript(input: {
     .single();
   assertNoDatabaseError(error, "transcript update");
   return videoRowSchema.parse(data);
+}
+
+export async function claimVideoForEmbedding(videoId: string): Promise<VideoRow | null> {
+  const { data, error } = await getSupabaseAdmin()
+    .from("videos")
+    .update({ status: "embedding", error_code: null })
+    .eq("id", videoId)
+    .eq("status", "transcript_ready")
+    .select("*")
+    .maybeSingle();
+  assertNoDatabaseError(error, "embedding claim");
+  return data ? videoRowSchema.parse(data) : null;
+}
+
+export async function getScenesForEmbedding(videoId: string): Promise<SceneForEmbedding[]> {
+  const { data, error } = await getSupabaseAdmin()
+    .from("video_scenes")
+    .select("id,video_id,scene_index,start_time,end_time,description,retrieval_text")
+    .eq("video_id", videoId)
+    .order("scene_index", { ascending: true });
+  assertNoDatabaseError(error, "scene read");
+  return scenesForEmbeddingSchema.parse(data);
+}
+
+export async function persistSceneEmbeddings(input: {
+  video: VideoRow;
+  scenes: SceneForEmbedding[];
+  embeddings: number[][];
+  model: string;
+}): Promise<VideoRow> {
+  if (input.scenes.length !== input.embeddings.length) {
+    throw new Error("Scene and embedding counts do not match.");
+  }
+
+  const rows = input.scenes.map((scene, index) => ({
+    ...scene,
+    embedding: input.embeddings[index],
+    embedding_model: input.model,
+  }));
+  const { error: sceneError } = await getSupabaseAdmin()
+    .from("video_scenes")
+    .upsert(rows, { onConflict: "id" });
+  assertNoDatabaseError(sceneError, "embedding upsert");
+
+  const { data, error } = await getSupabaseAdmin()
+    .from("videos")
+    .update({ status: "ready", embedding_model: input.model, error_code: null })
+    .eq("id", input.video.id)
+    .eq("status", "embedding")
+    .select("*")
+    .single();
+  assertNoDatabaseError(error, "ready update");
+  return videoRowSchema.parse(data);
+}
+
+export async function searchVideoScenes(input: {
+  videoId: string;
+  embedding: number[];
+  model: string;
+  threshold: number;
+  limit: number;
+}) {
+  const { data, error } = await getSupabaseAdmin().rpc("match_video_scenes", {
+    query_video_id: input.videoId,
+    query_embedding: input.embedding,
+    query_model: input.model,
+    match_threshold: input.threshold,
+    match_count: input.limit,
+  });
+  assertNoDatabaseError(error, "vector search");
+  return sceneMatchesSchema.parse(data);
 }
 

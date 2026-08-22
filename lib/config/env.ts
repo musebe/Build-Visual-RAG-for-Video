@@ -9,7 +9,7 @@ const serverEnvSchema = z.object({
   SUPABASE_URL: z.url(),
   SUPABASE_SECRET_KEY: z.string().trim().min(1),
   OPENAI_API_KEY: z.string().trim().min(1),
-  OPENAI_EMBEDDING_MODEL: z.string().trim().min(1).default("text-embedding-3-small"),
+  OPENAI_EMBEDDING_MODEL: z.literal("text-embedding-3-small").default("text-embedding-3-small"),
   MAX_VIDEO_BYTES: z.coerce.number().int().positive().default(104_857_600),
 });
 
@@ -40,4 +40,3 @@ export function getConfigurationStatus() {
     embeddings: Boolean(process.env.OPENAI_API_KEY),
   };
 }
-
