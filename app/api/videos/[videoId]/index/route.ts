@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { errorResponse } from "@/lib/api/errors";
 import { getServerEnv } from "@/lib/config/env";
-import { embedTexts } from "@/lib/embeddings/openai";
+import { embedDocuments } from "@/lib/embeddings/gemini";
 import { toPublicVideo } from "@/lib/videos/public-video";
 import {
   claimVideoForEmbedding,
@@ -50,12 +50,12 @@ export async function POST(
     claimedVideoId = video.id;
 
     const scenes = await getScenesForEmbedding(video.id);
-    const embeddings = await embedTexts(scenes.map((scene) => scene.retrieval_text));
+    const embeddings = await embedDocuments(scenes.map((scene) => scene.retrieval_text));
     const ready = await persistSceneEmbeddings({
       video,
       scenes,
       embeddings,
-      model: getServerEnv().OPENAI_EMBEDDING_MODEL,
+      model: getServerEnv().GEMINI_EMBEDDING_MODEL,
     });
 
     return NextResponse.json({
@@ -73,4 +73,3 @@ export async function POST(
     return errorResponse(error, 502);
   }
 }
-

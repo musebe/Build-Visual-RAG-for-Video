@@ -11,7 +11,7 @@ import {
   getBenchmarkQuestions,
   getLatestBenchmark,
 } from "@/lib/benchmark/repository";
-import { embedTexts } from "@/lib/embeddings/openai";
+import { embedQueries } from "@/lib/embeddings/gemini";
 import { getVideo, searchVideoScenes } from "@/lib/videos/repository";
 
 export const runtime = "nodejs";
@@ -42,7 +42,7 @@ export async function POST(request: Request, context: { params: Promise<{ videoI
     const questions = await getBenchmarkQuestions(video.id, version);
     const run = await createBenchmarkRun(video, version);
     runId = run.id;
-    const embeddings = await embedTexts(questions.map((question) => question.question));
+    const embeddings = await embedQueries(questions.map((question) => question.question));
 
     const evaluations = [];
     for (let offset = 0; offset < questions.length; offset += 5) {

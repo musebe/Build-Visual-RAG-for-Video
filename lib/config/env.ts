@@ -8,8 +8,8 @@ const serverEnvSchema = z.object({
   CLOUDINARY_API_SECRET: z.string().trim().min(1),
   SUPABASE_URL: z.url(),
   SUPABASE_SECRET_KEY: z.string().trim().min(1),
-  OPENAI_API_KEY: z.string().trim().min(1),
-  OPENAI_EMBEDDING_MODEL: z.literal("text-embedding-3-small").default("text-embedding-3-small"),
+  GEMINI_API_KEY: z.string().trim().min(1),
+  GEMINI_EMBEDDING_MODEL: z.literal("gemini-embedding-2").default("gemini-embedding-2"),
   MAX_VIDEO_BYTES: z.coerce.number().int().positive().default(104_857_600),
 });
 
@@ -37,6 +37,6 @@ export function getConfigurationStatus() {
       Boolean(process.env.CLOUDINARY_API_KEY) &&
       Boolean(process.env.CLOUDINARY_API_SECRET),
     database: Boolean(process.env.SUPABASE_URL) && Boolean(process.env.SUPABASE_SECRET_KEY),
-    embeddings: Boolean(process.env.OPENAI_API_KEY),
+    embeddings: Boolean(process.env.GEMINI_API_KEY),
   };
 }

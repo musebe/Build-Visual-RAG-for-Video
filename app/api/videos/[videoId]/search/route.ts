@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { errorResponse } from "@/lib/api/errors";
 import { getServerEnv } from "@/lib/config/env";
-import { embedQuery } from "@/lib/embeddings/openai";
+import { embedQuery } from "@/lib/embeddings/gemini";
 import { searchRequestSchema, toTimestampCitation } from "@/lib/search/contracts";
 import { getVideo, searchVideoScenes } from "@/lib/videos/repository";
 
@@ -30,7 +30,7 @@ export async function POST(
       );
     }
 
-    const model = getServerEnv().OPENAI_EMBEDDING_MODEL;
+    const model = getServerEnv().GEMINI_EMBEDDING_MODEL;
     if (video.embedding_model !== model) {
       return NextResponse.json(
         { error: "The stored scenes use a different embedding model." },
@@ -62,4 +62,3 @@ export async function POST(
     return errorResponse(error, 502);
   }
 }
-
