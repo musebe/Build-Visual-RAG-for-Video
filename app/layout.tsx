@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "next-cloudinary/dist/cld-video-player.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "SceneSeeker | Visual RAG for video",
