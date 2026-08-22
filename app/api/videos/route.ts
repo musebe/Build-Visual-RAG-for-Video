@@ -7,7 +7,8 @@ import {
   startVideoAnalysis,
 } from "@/lib/cloudinary/ai-video-analysis";
 import {
-  assertOwnedVideo,
+  assertIngestionOwnership,
+  assertVideoConstraints,
   deleteVideo,
   getVideoByAssetId,
   VIDEO_PUBLIC_ID_PREFIX,
@@ -43,8 +44,9 @@ export async function POST(request: Request) {
     }
 
     const asset = await getVideoByAssetId(input.assetId);
-    assertOwnedVideo(asset, input.publicId);
+    assertIngestionOwnership(asset, input.publicId);
     assetVerified = true;
+    assertVideoConstraints(asset);
 
     const video = await createVideo({
       video: asset,

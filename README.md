@@ -33,7 +33,7 @@ Cloudinary remains the source of truth for the video and generated visual transc
 
 ## Status
 
-The project is being built in recoverable feature checkpoints. See [the architecture](docs/architecture.md) and [article handoff](docs/article-handoff.md) for the verified API contract, constraints, benchmark plan, and editorial objective.
+The application, retrieval engine, and benchmark workbench are implemented. See [setup](docs/setup.md), [architecture](docs/architecture.md), [benchmark protocol](docs/benchmark.md), and [article handoff](docs/article-handoff.md) for the API contract, constraints, evidence method, and editorial objective.
 
 ## Local setup
 

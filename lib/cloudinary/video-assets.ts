@@ -108,8 +108,7 @@ export async function getVideoByAssetId(assetId: string): Promise<CloudinaryVide
   return video;
 }
 
-export function assertOwnedVideo(video: CloudinaryVideo, expectedPublicId: string) {
-  const { MAX_VIDEO_BYTES } = getServerEnv();
+export function assertIngestionOwnership(video: CloudinaryVideo, expectedPublicId: string) {
   const ingestId = expectedPublicId.slice(VIDEO_PUBLIC_ID_PREFIX.length);
 
   if (
@@ -119,6 +118,10 @@ export function assertOwnedVideo(video: CloudinaryVideo, expectedPublicId: strin
   ) {
     throw new Error("The uploaded asset does not belong to this ingestion request.");
   }
+}
+
+export function assertVideoConstraints(video: CloudinaryVideo) {
+  const { MAX_VIDEO_BYTES } = getServerEnv();
 
   if (!SUPPORTED_VIDEO_FORMATS.includes(video.format as (typeof SUPPORTED_VIDEO_FORMATS)[number])) {
     throw new Error("Cloudinary decoded an unsupported video format.");
@@ -136,4 +139,3 @@ export async function deleteVideo(assetId: string) {
     type: "upload",
   });
 }
-
