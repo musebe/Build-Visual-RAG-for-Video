@@ -34,11 +34,16 @@ Official references:
 - [Supabase semantic search](https://supabase.com/docs/guides/ai/semantic-search)
 - [Supabase vector columns](https://supabase.com/docs/guides/ai/vector-columns)
 
-## 3. OpenAI embeddings
+## 3. Gemini embeddings
 
-Create an API key and set `OPENAI_EMBEDDING_MODEL=text-embedding-3-small`. The database column is fixed at 1,536 dimensions to match that model's default output. A different embedding model requires a migration and a complete re-index; mixing models is rejected.
+Create a Gemini API key in Google AI Studio and set `GEMINI_EMBEDDING_MODEL=gemini-embedding-2`. The application explicitly requests 1,536 output dimensions to match the Supabase vector column. A model or dimension change requires a complete re-index, and a dimension change also requires a database migration. Mixing models is rejected.
 
-Official reference: [text-embedding-3-small](https://developers.openai.com/api/docs/models/text-embedding-3-small).
+The index route formats Cloudinary scene descriptions as retrieval documents. Search and benchmark routes format questions as retrieval queries. This distinction follows Google's guidance for `gemini-embedding-2`, which does not accept the older `taskType` parameter.
+
+Official references:
+
+- [Gemini embeddings](https://ai.google.dev/gemini-api/docs/embeddings)
+- [Create and manage Gemini API keys](https://ai.google.dev/gemini-api/docs/api-key)
 
 ## 4. Environment variables
 
@@ -68,4 +73,3 @@ The expected response has `ok: true` and all three service booleans set to `true
 ## 6. Deploy
 
 Add the same environment variables to Vercel and deploy. The direct upload avoids routing video bytes through the Vercel function, but the analysis poll, embedding request, and benchmark runner still need suitable function-duration limits. For long videos or production traffic, move those stages to a durable background workflow and add authentication, quotas, rate limits, asset retention, and retry controls.
-

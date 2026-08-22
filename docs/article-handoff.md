@@ -18,7 +18,7 @@ Create semantic video search that understands visual scenes even when a video co
 
 ### Technical stack
 
-Next.js, Cloudinary AI Video Analysis API, Supabase `pgvector`, OpenAI text embeddings, Cloudinary Video Player, TypeScript, React, shadcn, and Vitest.
+Next.js, Cloudinary AI Video Analysis API, Supabase `pgvector`, Gemini embeddings, Cloudinary Video Player, TypeScript, React, shadcn, and Vitest.
 
 ### Primary SEO focus
 
@@ -57,7 +57,7 @@ A 30-question benchmark measuring top-1 scene accuracy, top-3 scene recall, time
 - Analysis is asynchronous: `POST /v2/video/{cloud_name}/ai_video_analysis` returns a `job_id`, and the corresponding `GET` returns a raw visual-transcript asset after completion.
 - Each raw JSON segment contains `transcript`, `start_time`, and `end_time`. The API currently returns the transcript but not embeddings, summaries, titles, or tags.
 - [Supabase semantic search](https://supabase.com/docs/guides/ai/semantic-search) uses the `pgvector` extension and recommends pushing metadata filters into the SQL matching function.
-- [OpenAI `text-embedding-3-small`](https://developers.openai.com/api/docs/models/text-embedding-3-small) turns the Cloudinary-generated text into vectors used for semantic comparison. It does not process the source video.
+- [Gemini `gemini-embedding-2`](https://ai.google.dev/gemini-api/docs/embeddings) turns the Cloudinary-generated text into 1,536-dimensional vectors used for semantic comparison. It does not process the source video; Cloudinary remains the source of the timestamped visual evidence.
 - Existing Cloudinary content discusses asset search, transcription, tagging, and video delivery. This article uniquely proves search inside silent video with timestamp-level retrieval and a reproducible accuracy benchmark.
 
 ### Code and implementation notes
@@ -66,7 +66,7 @@ A 30-question benchmark measuring top-1 scene accuracy, top-3 scene recall, time
 - Call the Beta analysis endpoint with an `Authorization: Basic` header derived on the server, not credentials embedded in a logged URL.
 - Persist the `job_id` before polling so asynchronous analysis can resume.
 - Validate the raw transcript with Zod and use one Cloudinary scene segment per retrievable citation.
-- Batch scene-description embeddings and persist the model name with every vector.
+- Embed scene descriptions as retrieval documents, embed searches and benchmark questions as retrieval queries, and persist the model name with every vector.
 - Filter Supabase similarity search by video inside the SQL function.
 - Control `CldVideoPlayer` through `playerRef` and seek to the cited `start_time`.
 - Keep benchmark labels separate from predictions and report all four retrieval metrics.

@@ -27,5 +27,4 @@ Every run uses unthresholded top-three retrieval. This prevents a tuned similari
 
 ## Claim status
 
-The repository contains the benchmark engine and a 30-question template, but no accuracy number should be published until a real silent-video corpus is uploaded, independently labeled, and run end to end with configured Cloudinary, Supabase, and OpenAI accounts.
-
+The repository contains the benchmark engine and a 30-question template, but no accuracy number should be published until a real silent-video corpus is uploaded, independently labeled, and run end to end with configured Cloudinary, Supabase, and Gemini accounts.

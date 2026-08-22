@@ -14,7 +14,7 @@ Video upload
   -> Cloudinary AI Video Analysis job (Beta)
   -> Cloudinary raw visual-transcript asset
   -> validated scene segments with timestamps
-  -> OpenAI text embeddings
+  -> Gemini retrieval embeddings
   -> Supabase pgvector
   -> semantic search
   -> timestamped Cloudinary Video Player citation
@@ -27,7 +27,7 @@ Cloudinary remains the source of truth for the video and generated visual transc
 - Next.js 16 and React 19, scaffolded with [`create-cloudinary-next`](https://github.com/cloudinary-devs/create-cloudinary-next)
 - Cloudinary Node.js SDK, AI Video Analysis API, raw transcript assets, and Cloudinary Video Player
 - Supabase Postgres with `pgvector`
-- OpenAI `text-embedding-3-small`
+- Gemini `gemini-embedding-2` with 1,536-dimensional output
 - shadcn with Base UI and Tailwind CSS 4
 - Vitest
 
@@ -56,7 +56,7 @@ The browser asks `POST /api/uploads/sign` for constrained upload parameters, upl
 
 This direct-upload design keeps large video bytes and Cloudinary credentials out of the Next.js function. The signature fixes the random public ID, formats, tags, context, delivery type, and overwrite behavior. The server independently checks Cloudinary's decoded format and file size during registration.
 
-Call `POST /api/videos/:videoId/index` once the transcript is ready. The server embeds scene descriptions in bounded batches with `text-embedding-3-small` and stores all 1,536-dimensional vectors with their model name. `POST /api/videos/:videoId/search` embeds a natural-language query and calls a video-scoped cosine-search function. Every result preserves the Cloudinary scene's exact start and end times for player citations.
+Call `POST /api/videos/:videoId/index` once the transcript is ready. The server embeds Cloudinary scene descriptions in bounded concurrent batches with `gemini-embedding-2` and stores all 1,536-dimensional vectors with their model name. `POST /api/videos/:videoId/search` embeds a natural-language query and calls a video-scoped cosine-search function. Documents and queries use Google's recommended retrieval prefixes, and every result preserves the Cloudinary scene's exact start and end times for player citations.
 
 ## Benchmark proof
 

@@ -19,7 +19,7 @@ The API is currently Beta and asynchronous. A request returns a `job_id`; a comp
 | Cloudinary | Store the source video, run AI Video Analysis, store the generated raw transcript, optimize video delivery, and provide the player source |
 | Supabase | Persist workflow state, scene timestamps and descriptions, vector embeddings, benchmark questions, expected scenes, and measured results |
 
-No Cloudinary API secret, Supabase secret key, or OpenAI API key may enter a Client Component or browser response.
+No Cloudinary API secret, Supabase secret key, or Gemini API key may enter a Client Component or browser response.
 
 Video bytes travel directly from the browser to Cloudinary with short-lived signed parameters. The Next.js server chooses a random public ID and signs the accepted formats, ingestion context, tags, delivery type, and overwrite rule. After upload, the server reads the asset back by immutable `asset_id` and verifies its public-ID namespace, ingestion marker, decoded format, and actual byte size before analysis begins.
 
@@ -80,7 +80,7 @@ Filtering inside the SQL function prevents an outer PostgREST filter from shrink
 
 The first demo uses exact cosine search because each video produces a modest number of scene rows. It does not add an approximate vector index prematurely. If the corpus grows toward hundreds of thousands of scenes, benchmark an HNSW index and its filtered-recall behavior before changing the retrieval proof.
 
-`text-embedding-3-small` produces the 1,536-dimensional vectors in this version. Both the video row and each scene row persist that model name, and the SQL function filters on it. A query is rejected if the configured model differs from the indexed model because cross-model vector comparisons are not meaningful.
+`gemini-embedding-2` produces 1,536-dimensional vectors in this version through its configurable output dimensionality. Cloudinary scene descriptions use the `title: ... | text: ...` retrieval-document format, while searches and benchmark questions use the `task: search result | query: ...` format recommended for this model. Both the video row and each scene row persist the model name, and the SQL function filters on it. A query is rejected if the configured model differs from the indexed model because cross-model vector comparisons are not meaningful.
 
 ## Timestamp citations
 
