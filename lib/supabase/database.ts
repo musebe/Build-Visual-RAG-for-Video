@@ -87,6 +87,56 @@ type SceneInsert = Omit<
 
 type SceneUpdate = Partial<SceneInsert>;
 
+type BenchmarkQuestionRow = {
+  id: number;
+  video_id: string;
+  benchmark_version: string;
+  position: number;
+  question: string;
+  expected_scene_index: number;
+  expected_start_time: number;
+  expected_end_time: number;
+  created_at: string;
+};
+
+type BenchmarkRunRow = {
+  id: string;
+  video_id: string;
+  benchmark_version: string;
+  embedding_model: string;
+  analysis_prompt: string;
+  match_count: number;
+  match_threshold: number;
+  question_count: number;
+  status: "running" | "complete" | "failed";
+  top1_accuracy: number | null;
+  top3_recall: number | null;
+  timestamp_overlap_accuracy: number | null;
+  mean_start_time_error: number | null;
+  created_at: string;
+  completed_at: string | null;
+};
+
+type BenchmarkResultRow = {
+  id: number;
+  run_id: string;
+  question_id: number;
+  question: string;
+  expected_scene_index: number;
+  expected_start_time: number;
+  expected_end_time: number;
+  retrieved_scene_index: number | null;
+  retrieved_start_time: number | null;
+  retrieved_end_time: number | null;
+  similarity: number | null;
+  expected_rank: number | null;
+  top1_correct: boolean;
+  top3_hit: boolean;
+  timestamp_overlap: boolean;
+  start_time_error: number | null;
+  created_at: string;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -109,6 +159,47 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      benchmark_questions: {
+        Row: BenchmarkQuestionRow;
+        Insert: Omit<BenchmarkQuestionRow, "id" | "created_at"> &
+          Partial<Pick<BenchmarkQuestionRow, "id" | "created_at">>;
+        Update: Partial<Omit<BenchmarkQuestionRow, "id">>;
+        Relationships: [];
+      };
+      benchmark_runs: {
+        Row: BenchmarkRunRow;
+        Insert: Omit<
+          BenchmarkRunRow,
+          | "id"
+          | "top1_accuracy"
+          | "top3_recall"
+          | "timestamp_overlap_accuracy"
+          | "mean_start_time_error"
+          | "created_at"
+          | "completed_at"
+        > &
+          Partial<
+            Pick<
+              BenchmarkRunRow,
+              | "id"
+              | "top1_accuracy"
+              | "top3_recall"
+              | "timestamp_overlap_accuracy"
+              | "mean_start_time_error"
+              | "created_at"
+              | "completed_at"
+            >
+          >;
+        Update: Partial<Omit<BenchmarkRunRow, "id">>;
+        Relationships: [];
+      };
+      benchmark_results: {
+        Row: BenchmarkResultRow;
+        Insert: Omit<BenchmarkResultRow, "id" | "created_at"> &
+          Partial<Pick<BenchmarkResultRow, "id" | "created_at">>;
+        Update: Partial<Omit<BenchmarkResultRow, "id">>;
+        Relationships: [];
       };
     };
     Views: Record<string, never>;

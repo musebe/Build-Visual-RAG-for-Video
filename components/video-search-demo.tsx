@@ -237,7 +237,7 @@ export function VideoSearchDemo() {
       <header className="mb-10 flex items-center justify-between gap-4">
         <span className="text-sm font-semibold tracking-tight">SceneSeeker</span>
         <Link
-          href="/benchmark"
+          href={video ? `/benchmark?video=${encodeURIComponent(video.id)}` : "/benchmark"}
           className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
         >
           Benchmark

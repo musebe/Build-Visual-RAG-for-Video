@@ -58,6 +58,12 @@ This direct-upload design keeps large video bytes and Cloudinary credentials out
 
 Call `POST /api/videos/:videoId/index` once the transcript is ready. The server embeds scene descriptions in bounded batches with `text-embedding-3-small` and stores all 1,536-dimensional vectors with their model name. `POST /api/videos/:videoId/search` embeds a natural-language query and calls a video-scoped cosine-search function. Every result preserves the Cloudinary scene's exact start and end times for player citations.
 
+## Benchmark proof
+
+Open `/benchmark?video=:videoId`, download the template, and use `GET /api/videos/:videoId/scenes` to label exactly 30 visual questions before saving the set. Placeholder questions, missing scene indexes, and timestamps beyond the source duration are rejected.
+
+Each run preserves the question set version, Cloudinary analysis prompt, embedding model, threshold, result count, per-question rankings, and aggregate metrics. The workbench reports top-1 scene accuracy, top-3 scene recall, top-result timestamp overlap, and mean absolute start-time error separately. Do not publish benchmark claims until the template has been replaced with human labels and a real run is persisted.
+
 ## Validation
 
 ```bash

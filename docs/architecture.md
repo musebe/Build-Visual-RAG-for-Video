@@ -111,6 +111,8 @@ Report these metrics separately:
 
 The benchmark must preserve the question set, source videos, model name, transcript prompt, threshold, run date, and raw result rows. Do not claim accuracy until all 30 questions run against real Cloudinary transcripts and stored vectors.
 
+The `/benchmark` workbench is deliberately separate from the search demo. A scene-catalog endpoint exposes descriptions and exact Cloudinary ranges for labeling, while the save endpoint requires exactly 30 non-placeholder questions and validates each expected scene and timestamp against the indexed source video. Benchmark retrieval uses an unthresholded top three so threshold tuning cannot silently improve the reported recall.
+
 ## Current constraints
 
 - Cloudinary AI Video Analysis is Beta and may change before general availability.
