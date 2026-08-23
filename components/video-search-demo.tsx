@@ -89,6 +89,12 @@ const statusProgress: Record<VideoStatus, number> = {
   failed: 100,
 };
 
+const suggestedQueries = [
+  "When is the turtle viewed from below?",
+  "When does the turtle swim close to the camera?",
+  "When does the turtle swim away?",
+] as const;
+
 function wait(milliseconds: number, signal: AbortSignal) {
   return new Promise<void>((resolve, reject) => {
     const timer = window.setTimeout(resolve, milliseconds);
@@ -413,6 +419,31 @@ export function VideoSearchDemo() {
               {isSearching ? <LoaderCircle className="animate-spin" /> : <Search />}
             </Button>
           </form>
+
+          <div className="mt-4 flex flex-col gap-2">
+            <p id="suggested-searches" className="text-xs text-muted-foreground">
+              Try an example search
+            </p>
+            <div
+              role="group"
+              aria-labelledby="suggested-searches"
+              className="flex flex-wrap gap-2"
+            >
+              {suggestedQueries.map((suggestion) => (
+                <Button
+                  key={suggestion}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={video?.status !== "ready" || isSearching}
+                  className="h-auto min-h-8 whitespace-normal text-left"
+                  onClick={() => setQuery(suggestion)}
+                >
+                  {suggestion}
+                </Button>
+              ))}
+            </div>
+          </div>
 
           <div className="mt-5" aria-live="polite">
             {results.length === 0 ? (
