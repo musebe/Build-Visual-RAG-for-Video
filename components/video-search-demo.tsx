@@ -150,16 +150,51 @@ export function VideoSearchDemo() {
     throw new Error("Video analysis is taking longer than expected. Refresh and try again.");
   }
 
-  async function handleUpload() {
-    if (!file) return;
+  async function finishVideoSetup(initialVideo: PublicVideo, signal: AbortSignal) {
+    setVideo(initialVideo);
+    setPhase(statusCopy[initialVideo.status]);
+    setProgress(statusProgress[initialVideo.status]);
+
+    const ready = await pollUntilReady(initialVideo, signal);
+    setVideo(ready);
+    setPhase(statusCopy.ready);
+    setProgress(100);
+  }
+
+  function beginProcessing() {
     requestController.current?.abort();
     const controller = new AbortController();
     requestController.current = controller;
-
     setError(null);
     setResults([]);
     setVideo(null);
     setIsProcessing(true);
+    return controller;
+  }
+
+  async function handleDemoVideo() {
+    const controller = beginProcessing();
+
+    try {
+      setPhase("Loading the Cloudinary demo");
+      setProgress(15);
+      const registered = await requestJson<VideoResponse>("/api/videos/demo", {
+        method: "POST",
+        signal: controller.signal,
+      });
+      await finishVideoSetup(registered.video, controller.signal);
+    } catch (caught) {
+      if (caught instanceof DOMException && caught.name === "AbortError") return;
+      setError(caught instanceof Error ? caught.message : "Demo video processing failed.");
+      setPhase("Processing stopped");
+    } finally {
+      setIsProcessing(false);
+    }
+  }
+
+  async function handleUpload() {
+    if (!file) return;
+    const controller = beginProcessing();
 
     try {
       setPhase("Checking video");
@@ -190,14 +225,7 @@ export function VideoSearchDemo() {
         }),
         signal: controller.signal,
       });
-      setVideo(registered.video);
-      setPhase(statusCopy[registered.video.status]);
-      setProgress(statusProgress[registered.video.status]);
-
-      const ready = await pollUntilReady(registered.video, controller.signal);
-      setVideo(ready);
-      setPhase(statusCopy.ready);
-      setProgress(100);
+      await finishVideoSetup(registered.video, controller.signal);
     } catch (caught) {
       if (caught instanceof DOMException && caught.name === "AbortError") return;
       setError(caught instanceof Error ? caught.message : "Video processing failed.");
@@ -249,15 +277,42 @@ export function VideoSearchDemo() {
           Search inside a silent video.
         </h1>
         <p className="mt-3 text-base leading-7 text-muted-foreground sm:text-lg">
-          Upload a video, describe what you remember seeing, and jump to the matching moment.
+          Load the demo, describe what you remember seeing, and jump to the matching moment.
         </p>
       </section>
 
-      <section aria-labelledby="upload-heading" className="mb-6 rounded-2xl border bg-card p-4 shadow-xs sm:p-5">
+      <section aria-labelledby="video-source-heading" className="mb-6 rounded-2xl border bg-card p-4 shadow-xs sm:p-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 id="video-source-heading" className="text-sm font-medium">
+              Cloudinary demo video
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              A silent sea-turtle clip with timestamped visual scenes.
+            </p>
+          </div>
+          <Button
+            type="button"
+            size="lg"
+            disabled={isProcessing}
+            className="h-11 sm:min-w-40"
+            onClick={handleDemoVideo}
+          >
+            {isProcessing ? (
+              <LoaderCircle data-icon="inline-start" className="animate-spin" />
+            ) : (
+              <Play data-icon="inline-start" />
+            )}
+            {isProcessing ? "Preparing" : "Load demo video"}
+          </Button>
+        </div>
+
+        <div className="my-4 border-t" />
+
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
           <div className="min-w-0 flex-1">
-            <label id="upload-heading" htmlFor="video-file" className="mb-2 block text-sm font-medium">
-              Video
+            <label htmlFor="video-file" className="mb-2 block text-sm font-medium">
+              Or upload your own video
             </label>
             <Input
               id="video-file"

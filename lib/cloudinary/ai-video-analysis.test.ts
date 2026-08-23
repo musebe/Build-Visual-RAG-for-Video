@@ -2,8 +2,27 @@ import { describe, expect, it } from "vitest";
 
 import {
   normalizeAnalysisStatus,
+  parseAnalysisResponse,
   parseVisualTranscript,
 } from "./visual-transcript";
+
+describe("parseAnalysisResponse", () => {
+  it("unwraps the documented Cloudinary response envelope", () => {
+    expect(
+      parseAnalysisResponse({
+        request_id: "request-123",
+        data: { job_id: "job-123", status: "pending" },
+      }),
+    ).toEqual({ job_id: "job-123", status: "pending" });
+  });
+
+  it("accepts the earlier unwrapped response during the Beta", () => {
+    expect(parseAnalysisResponse({ job_id: "job-456", status: "completed" })).toEqual({
+      job_id: "job-456",
+      status: "completed",
+    });
+  });
+});
 
 describe("parseVisualTranscript", () => {
   it("accepts timestamped Cloudinary scene descriptions", () => {

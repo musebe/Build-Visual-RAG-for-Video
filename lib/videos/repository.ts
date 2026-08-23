@@ -198,13 +198,18 @@ export async function persistSceneEmbeddings(input: {
   }
 
   const rows = input.scenes.map((scene, index) => ({
-    ...scene,
+    video_id: scene.video_id,
+    scene_index: scene.scene_index,
+    start_time: scene.start_time,
+    end_time: scene.end_time,
+    description: scene.description,
+    retrieval_text: scene.retrieval_text,
     embedding: input.embeddings[index],
     embedding_model: input.model,
   }));
   const { error: sceneError } = await getSupabaseAdmin()
     .from("video_scenes")
-    .upsert(rows, { onConflict: "id" });
+    .upsert(rows, { onConflict: "video_id,scene_index" });
   assertNoDatabaseError(sceneError, "embedding upsert");
 
   const { data, error } = await getSupabaseAdmin()
@@ -235,4 +240,3 @@ export async function searchVideoScenes(input: {
   assertNoDatabaseError(error, "vector search");
   return sceneMatchesSchema.parse(data);
 }
-

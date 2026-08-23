@@ -10,6 +10,7 @@ const serverEnvSchema = z.object({
   SUPABASE_SECRET_KEY: z.string().trim().min(1),
   GEMINI_API_KEY: z.string().trim().min(1),
   GEMINI_EMBEDDING_MODEL: z.literal("gemini-embedding-2").default("gemini-embedding-2"),
+  DEMO_VIDEO_ASSET_ID: z.string().trim().min(1).optional(),
   MAX_VIDEO_BYTES: z.coerce.number().int().positive().default(104_857_600),
 });
 

@@ -39,8 +39,15 @@ const cloudinaryVideoSchema = z.object({
     .optional(),
 });
 
+const cloudinaryVideoLocatorSchema = cloudinaryVideoSchema.pick({
+  asset_id: true,
+  public_id: true,
+  resource_type: true,
+  type: true,
+});
+
 const resourcesResponseSchema = z.object({
-  resources: z.array(cloudinaryVideoSchema),
+  resources: z.array(cloudinaryVideoLocatorSchema).length(1),
 });
 
 export type CloudinaryVideo = z.infer<typeof cloudinaryVideoSchema>;
@@ -93,15 +100,26 @@ export function createSignedVideoUpload(input: UploadRequest) {
 }
 
 export async function getVideoByAssetId(assetId: string): Promise<CloudinaryVideo> {
-  const result = await getCloudinary().api.resources_by_asset_ids(assetId, {
-    context: true,
-    resource_type: "video",
-    type: "upload",
-  });
-  const parsed = resourcesResponseSchema.parse(result);
-  const video = parsed.resources[0];
+  const located = resourcesResponseSchema.parse(
+    await getCloudinary().api.resources_by_asset_ids(assetId, {
+      resource_type: "video",
+      type: "upload",
+    }),
+  ).resources[0];
 
-  if (!video || video.asset_id !== assetId) {
+  if (!located || located.asset_id !== assetId) {
+    throw new Error("Cloudinary video was not found.");
+  }
+
+  const result = await getCloudinary().api.resource(located.public_id, {
+    context: true,
+    media_metadata: true,
+    resource_type: "video",
+    type: located.type,
+  });
+  const video = cloudinaryVideoSchema.parse(result);
+
+  if (video.asset_id !== assetId) {
     throw new Error("Cloudinary video was not found.");
   }
 

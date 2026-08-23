@@ -1,10 +1,8 @@
 import "server-only";
 
-import { z } from "zod";
-
 import { getServerEnv } from "@/lib/config/env";
 import {
-  analysisStatusSchema,
+  parseAnalysisResponse,
   parseVisualTranscript,
   type VisualScene,
 } from "@/lib/cloudinary/visual-transcript";
@@ -12,21 +10,7 @@ import {
 export { normalizeAnalysisStatus } from "@/lib/cloudinary/visual-transcript";
 export type { VisualScene } from "@/lib/cloudinary/visual-transcript";
 
-const analysisResponseSchema = z.object({
-  job_id: z.string().min(1),
-  status: analysisStatusSchema,
-  visual_transcription: z
-    .object({
-      asset_id: z.string().min(1),
-      public_id: z.string().min(1),
-      resource_type: z.literal("raw"),
-      delivery_type: z.string().min(1),
-      url: z.url(),
-    })
-    .optional(),
-});
-
-export type AnalysisResponse = z.infer<typeof analysisResponseSchema>;
+export type { AnalysisResponse } from "@/lib/cloudinary/visual-transcript";
 
 export const DEFAULT_VISUAL_TRANSCRIPTION_PROMPT =
   "Describe each visually distinct scene with concrete actions, people, objects, settings, visible text, and changes. Do not infer speech or events that are not visible.";
@@ -68,7 +52,7 @@ async function requestAnalysis(url: string, init?: RequestInit) {
     );
   }
 
-  return analysisResponseSchema.parse(await response.json());
+  return parseAnalysisResponse(await response.json());
 }
 
 export async function startVideoAnalysis(
