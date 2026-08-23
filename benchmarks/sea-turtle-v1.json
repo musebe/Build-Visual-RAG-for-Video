@@ -1,0 +1,185 @@
+{
+  "version": "sea-turtle-v1",
+  "questions": [
+    {
+      "question": "When is the turtle viewed from a low angle?",
+      "expectedSceneIndex": 0,
+      "expectedStartTime": 0,
+      "expectedEndTime": 4
+    },
+    {
+      "question": "When is the ocean floor faintly visible below the turtle?",
+      "expectedSceneIndex": 0,
+      "expectedStartTime": 0,
+      "expectedEndTime": 4
+    },
+    {
+      "question": "When does the turtle turn with its shell and flippers visible?",
+      "expectedSceneIndex": 0,
+      "expectedStartTime": 0,
+      "expectedEndTime": 4
+    },
+    {
+      "question": "When is the turtle first shown swimming through deep blue water?",
+      "expectedSceneIndex": 0,
+      "expectedStartTime": 0,
+      "expectedEndTime": 4
+    },
+    {
+      "question": "Which moment shows the turtle before it approaches the camera?",
+      "expectedSceneIndex": 0,
+      "expectedStartTime": 0,
+      "expectedEndTime": 4
+    },
+    {
+      "question": "When can the turtle's shell and both flippers be seen during a turn?",
+      "expectedSceneIndex": 0,
+      "expectedStartTime": 0,
+      "expectedEndTime": 4
+    },
+    {
+      "question": "At what point is the turtle above a distant ocean floor?",
+      "expectedSceneIndex": 0,
+      "expectedStartTime": 0,
+      "expectedEndTime": 4
+    },
+    {
+      "question": "When does the video begin with a wide underwater view of the turtle?",
+      "expectedSceneIndex": 0,
+      "expectedStartTime": 0,
+      "expectedEndTime": 4
+    },
+    {
+      "question": "When is the turtle angled across the frame rather than facing the camera?",
+      "expectedSceneIndex": 0,
+      "expectedStartTime": 0,
+      "expectedEndTime": 4
+    },
+    {
+      "question": "When does the opening shot show the turtle turning underwater?",
+      "expectedSceneIndex": 0,
+      "expectedStartTime": 0,
+      "expectedEndTime": 4
+    },
+    {
+      "question": "When does the turtle swim directly toward the camera?",
+      "expectedSceneIndex": 1,
+      "expectedStartTime": 4.501,
+      "expectedEndTime": 8.5
+    },
+    {
+      "question": "When does the turtle swim close to the camera?",
+      "expectedSceneIndex": 1,
+      "expectedStartTime": 4.501,
+      "expectedEndTime": 8.5
+    },
+    {
+      "question": "When is the turtle's pale underside visible?",
+      "expectedSceneIndex": 1,
+      "expectedStartTime": 4.501,
+      "expectedEndTime": 8.5
+    },
+    {
+      "question": "When do we get a close-up view of the turtle's patterned head?",
+      "expectedSceneIndex": 1,
+      "expectedStartTime": 4.501,
+      "expectedEndTime": 8.5
+    },
+    {
+      "question": "At what moment does the turtle pass the camera?",
+      "expectedSceneIndex": 1,
+      "expectedStartTime": 4.501,
+      "expectedEndTime": 8.5
+    },
+    {
+      "question": "When are the turtle's head, flippers, and underside shown together?",
+      "expectedSceneIndex": 1,
+      "expectedStartTime": 4.501,
+      "expectedEndTime": 8.5
+    },
+    {
+      "question": "When is the closest view of the sea turtle?",
+      "expectedSceneIndex": 1,
+      "expectedStartTime": 4.501,
+      "expectedEndTime": 8.5
+    },
+    {
+      "question": "Which scene shows the turtle approaching and moving past the viewer?",
+      "expectedSceneIndex": 1,
+      "expectedStartTime": 4.501,
+      "expectedEndTime": 8.5
+    },
+    {
+      "question": "When can you inspect the pattern on the turtle's face?",
+      "expectedSceneIndex": 1,
+      "expectedStartTime": 4.501,
+      "expectedEndTime": 8.5
+    },
+    {
+      "question": "When does the camera capture the underside of the turtle at close range?",
+      "expectedSceneIndex": 1,
+      "expectedStartTime": 4.501,
+      "expectedEndTime": 8.5
+    },
+    {
+      "question": "When does the turtle swim away from the camera?",
+      "expectedSceneIndex": 2,
+      "expectedStartTime": 8.501,
+      "expectedEndTime": 12.501
+    },
+    {
+      "question": "When is the turtle's large segmented shell seen from behind?",
+      "expectedSceneIndex": 2,
+      "expectedStartTime": 8.501,
+      "expectedEndTime": 12.501
+    },
+    {
+      "question": "When does the turtle become a smaller shape in the distance?",
+      "expectedSceneIndex": 2,
+      "expectedStartTime": 8.501,
+      "expectedEndTime": 12.501
+    },
+    {
+      "question": "When do powerful flipper strokes propel the turtle away?",
+      "expectedSceneIndex": 2,
+      "expectedStartTime": 8.501,
+      "expectedEndTime": 12.501
+    },
+    {
+      "question": "When is the back of the turtle visible as it recedes?",
+      "expectedSceneIndex": 2,
+      "expectedStartTime": 8.501,
+      "expectedEndTime": 12.501
+    },
+    {
+      "question": "At what point does the turtle recede into open water?",
+      "expectedSceneIndex": 2,
+      "expectedStartTime": 8.501,
+      "expectedEndTime": 12.501
+    },
+    {
+      "question": "When does the segmented shell dominate the view before shrinking away?",
+      "expectedSceneIndex": 2,
+      "expectedStartTime": 8.501,
+      "expectedEndTime": 12.501
+    },
+    {
+      "question": "Which scene shows repeated flipper strokes carrying the turtle into the distance?",
+      "expectedSceneIndex": 2,
+      "expectedStartTime": 8.501,
+      "expectedEndTime": 12.501
+    },
+    {
+      "question": "When is the turtle moving farther away rather than toward the camera?",
+      "expectedSceneIndex": 2,
+      "expectedStartTime": 8.501,
+      "expectedEndTime": 12.501
+    },
+    {
+      "question": "What is the timestamp for the final shot of the turtle swimming away?",
+      "expectedSceneIndex": 2,
+      "expectedStartTime": 8.501,
+      "expectedEndTime": 12.501
+    }
+  ]
+}
