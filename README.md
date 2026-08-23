@@ -33,7 +33,7 @@ Cloudinary remains the source of truth for the video and generated visual transc
 
 ## Status
 
-The application, retrieval engine, and benchmark workbench are implemented. See [setup](docs/setup.md), [architecture](docs/architecture.md), [benchmark protocol](docs/benchmark.md), and [article handoff](docs/article-handoff.md) for the API contract, constraints, evidence method, and editorial objective.
+The application, retrieval engine, benchmark workbench, and full tutorial are implemented. See the [article draft](docs/article.md), [setup](docs/setup.md), [architecture](docs/architecture.md), [benchmark protocol](docs/benchmark.md), and [article handoff](docs/article-handoff.md) for the complete build, API contract, constraints, evidence method, and editorial objective.
 
 ## Local setup
 
@@ -66,7 +66,9 @@ Call `POST /api/videos/:videoId/index` once the transcript is ready. The server 
 
 Open `/benchmark?video=:videoId`, download the template, and use `GET /api/videos/:videoId/scenes` to label exactly 30 visual questions before saving the set. Placeholder questions, missing scene indexes, and timestamps beyond the source duration are rejected.
 
-Each run preserves the question set version, Cloudinary analysis prompt, embedding model, threshold, result count, per-question rankings, and aggregate metrics. The workbench reports top-1 scene accuracy, top-3 scene recall, top-result timestamp overlap, and mean absolute start-time error separately. Do not publish benchmark claims until the template has been replaced with human labels and a real run is persisted.
+Each run preserves the question set version, Cloudinary analysis prompt, embedding model, threshold, result count, per-question rankings, and aggregate metrics. The workbench reports top-1 scene accuracy, top-3 scene recall, top-result timestamp overlap, and mean absolute start-time error separately.
+
+The verified `sea-turtle-v1` run contains 30 human-labeled questions and measured 86.67% top-1 scene accuracy, 100% top-3 scene recall, 86.67% top-result timestamp overlap, and 0.73-second mean absolute start-time error. Read [the benchmark protocol and limitations](docs/benchmark.md) before citing those numbers.
 
 ## Validation
 
