@@ -23,6 +23,8 @@ No Cloudinary API secret, Supabase secret key, or Gemini API key may enter a Cli
 
 Video bytes travel directly from the browser to Cloudinary with short-lived signed parameters. The Next.js server chooses a random public ID and signs the accepted formats, ingestion context, tags, delivery type, and overwrite rule. After upload, the server reads the asset back by immutable `asset_id` and verifies its public-ID namespace, ingestion marker, decoded format, and actual byte size before analysis begins.
 
+The public demo follows a narrower route: `POST /api/videos/demo` accepts no client-supplied asset identifier. It reads the single server-configured `DEMO_VIDEO_ASSET_ID`, verifies the existing Cloudinary asset and its media metadata, and reuses the database row if that asset has already been analyzed. This avoids duplicate uploads and makes benchmark inputs reproducible.
+
 ## Workflow state
 
 ```text

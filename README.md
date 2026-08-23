@@ -48,9 +48,13 @@ npm run dev
 
 Apply [`supabase/migrations/202608220001_visual_rag.sql`](supabase/migrations/202608220001_visual_rag.sql) in the Supabase SQL Editor if you do not use the Supabase CLI. The migration creates the `vector` extension, workflow tables, constraints, and server-only row-level security boundary.
 
+Set `DEMO_VIDEO_ASSET_ID` to the immutable asset ID of a video already stored in the same Cloudinary product environment. The included demo configuration uses Cloudinary's `samples/sea-turtle` video. The application verifies that asset through the Admin API, analyzes and indexes it once, and reuses the resulting Supabase record on later visits.
+
 The Cloudinary AI Video Analysis API is currently Beta. Confirm that your Cloudinary product environment can use it before testing. Parameter names and availability may change before general access. The application fails visibly when the product environment cannot access the API.
 
 ## Ingestion API
+
+The primary interface calls `POST /api/videos/demo` to load the configured Cloudinary asset without uploading duplicate video bytes. Uploading another video remains available as a secondary path.
 
 The browser asks `POST /api/uploads/sign` for constrained upload parameters, uploads the video directly to Cloudinary, then sends the returned `asset_id`, `public_id`, and original filename to `POST /api/videos`. The server reads the Cloudinary asset back by immutable ID before it starts analysis. Poll `GET /api/videos/:videoId` until the state advances from `analyzing` to `transcript_ready`.
 

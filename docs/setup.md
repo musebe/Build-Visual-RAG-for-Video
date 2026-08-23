@@ -6,6 +6,7 @@
 2. Copy its cloud name, API key, and API secret from **Settings → API Keys**.
 3. Confirm that the product environment has access to the **AI Video Analysis API (Beta)**. This is an API capability, not one of the similarly named Marketplace tagging or transcription add-ons.
 4. Keep the API key and secret on the server. Only the cloud name uses the `NEXT_PUBLIC_` prefix.
+5. Copy the immutable asset ID of the video used by the public demo into `DEMO_VIDEO_ASSET_ID`. This repository's tested example is the Cloudinary `samples/sea-turtle` video.
 
 The browser never receives the API secret. It requests signed parameters from Next.js and uploads video bytes directly to Cloudinary. The registration route then reads the asset back by immutable `asset_id` and verifies the signed ingestion marker, generated public-ID namespace, decoded format, and actual size.
 
@@ -62,13 +63,14 @@ The expected response has `ok: true` and all three service booleans set to `true
 
 ## 5. Run the proof
 
-1. Open `/` and upload an MP4, MOV, or WebM up to the configured byte limit.
+1. Open `/` and select **Load demo video**. The first request analyzes and indexes the configured Cloudinary asset; later requests reuse it.
 2. Wait for `Ready to search`. Cloudinary analysis is asynchronous and may take several minutes.
 3. Search for a visible object, action, setting, color, or on-screen change that is not discoverable from speech.
 4. Select a result and verify that the Cloudinary Video Player seeks to the cited start time.
-5. Open `/benchmark?video=<video-id>`.
-6. View the scene catalog, download the template, and replace all 30 placeholders with human-authored labels.
-7. Save and run the benchmark. Preserve the result rows before making an accuracy claim.
+5. Optionally upload an MP4, MOV, or WebM up to the configured byte limit to test the user-ingestion path.
+6. Open `/benchmark?video=<video-id>`.
+7. View the scene catalog, download the template, and replace all 30 placeholders with human-authored labels.
+8. Save and run the benchmark. Preserve the result rows before making an accuracy claim.
 
 ## 6. Deploy
 
